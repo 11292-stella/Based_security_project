@@ -1,4 +1,4 @@
-package com.example.Based_security_project.Exception;
+package com.example.Based_security_project.exception;
 
 public class NotFoundException extends Exception{
 

@@ -1,12 +1,11 @@
-package com.example.Based_security_project.Service;
+package com.example.Based_security_project.service;
 
-import com.example.Based_security_project.Dto.UserDto;
-import com.example.Based_security_project.Enumeration.Role;
-import com.example.Based_security_project.Exception.NotFoundException;
-import com.example.Based_security_project.Model.User;
-import com.example.Based_security_project.Repository.UserRepository;
+import com.example.Based_security_project.dto.UserDto;
+import com.example.Based_security_project.enumeration.Role;
+import com.example.Based_security_project.exception.NotFoundException;
+import com.example.Based_security_project.model.User;
+import com.example.Based_security_project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +20,13 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User saveUser(UserDto userDto){
+    public User saveUser(UserDto userDto) {
         User user = new User();
         user.setNome(userDto.getNome());
         user.setCognome(userDto.getCognome());
         user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(Role.USER); 
 
         return userRepository.save(user);
     }
@@ -37,8 +36,13 @@ public class UserService {
     }
 
     public User getUser(int id) throws NotFoundException {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("User con id " + id + " non trovato"));
+        return userRepository.findById(id).
+                orElseThrow(() -> new NotFoundException("User con id " + id + " non trovato"));
+    }
+
+    public User getUserByUsername(String username) throws NotFoundException { // Add this method
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException("User con username " + username + " non trovato"));
     }
 
     public User updateUser(int id, UserDto userDto) throws NotFoundException {
@@ -47,8 +51,6 @@ public class UserService {
         userDaAggiornare.setNome(userDto.getNome());
         userDaAggiornare.setCognome(userDto.getCognome());
         userDaAggiornare.setUsername(userDto.getUsername());
-
-        // Verifica se la password nuova è diversa da quella salvata
         if (!passwordEncoder.matches(userDto.getPassword(), userDaAggiornare.getPassword())) {
             userDaAggiornare.setPassword(passwordEncoder.encode(userDto.getPassword()));
         }
@@ -60,6 +62,4 @@ public class UserService {
         User userDaCancellare = getUser(id);
         userRepository.delete(userDaCancellare);
     }
-
-
 }

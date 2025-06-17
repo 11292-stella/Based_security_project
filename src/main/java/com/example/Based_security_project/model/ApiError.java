@@ -1,4 +1,4 @@
-package com.example.Based_security_project.Model;
+package com.example.Based_security_project.model;
 
 import lombok.Data;
 

@@ -1,9 +1,9 @@
-package com.example.Based_security_project.Model;
+package com.example.Based_security_project.model;
 
-import com.example.Based_security_project.Enumeration.Role;
+import com.example.Based_security_project.enumeration.Role;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,23 +12,18 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-@Data
 @Entity
+@Data
+@Table(name = "users")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Use IDENTITY for auto-increment
     private int id;
-
     private String nome;
     private String cognome;
-
     @Column(unique = true)
     private String username;
-
     private String password;
-
-    private String email;
-
     @Enumerated(EnumType.STRING)
     private Role role;
 

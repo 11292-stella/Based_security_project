@@ -1,9 +1,9 @@
-package com.example.Based_security_project.Exception;
+package com.example.Based_security_project.exception;
 
 
 
 
-import com.example.Based_security_project.Model.ApiError;
+import com.example.Based_security_project.model.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -40,5 +40,14 @@ public class CustomizeExceptionHendler {
         error.setDataErrore(LocalDateTime.now());
         return error;
 
+    }
+
+    @ExceptionHandler(UnAuthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ApiError unAuthorizedExceptionHandler(UnAuthorizedException e) {
+        ApiError error = new ApiError();
+        error.setMessage(e.getMessage());
+        error.setDataErrore(LocalDateTime.now());
+        return error;
     }
 }

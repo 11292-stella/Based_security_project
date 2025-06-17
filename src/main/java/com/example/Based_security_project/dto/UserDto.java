@@ -1,4 +1,4 @@
-package com.example.Based_security_project.Dto;
+package com.example.Based_security_project.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
