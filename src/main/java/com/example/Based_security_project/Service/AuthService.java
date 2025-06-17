@@ -23,6 +23,9 @@ public class AuthService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private EmailService emailService;
+
     public LoginResponseDto login(LoginDto loginDto) throws NotFoundException {
         User user = userRepository.findByUsername(loginDto.getUsername())
                 .orElseThrow(() -> new NotFoundException("Utente con questo username/password non trovato"));
@@ -47,6 +50,8 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setRole(Role.USER); // ruolo di default
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        emailService.sendWelcomeEmail(savedUser);
+        return savedUser;
     }
 }

@@ -16,4 +16,7 @@ public class UserDto {
 
     @NotEmpty(message = "La password non può essere vuota")
     private String password;
+
+    @NotEmpty(message = "La password non può essere vuota")
+    private String email;
 }
