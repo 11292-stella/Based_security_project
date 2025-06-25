@@ -1,5 +1,6 @@
 package com.example.Based_security_project.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
@@ -16,6 +17,10 @@ public class UserDto {
 
     @NotEmpty(message = "La password non può essere vuota")
     private String password;
+
+    @NotEmpty(message = "l'email non può essere vuota")
+    @Email(message = "formato email non valido")
+    private String email;
 
 
 }

@@ -6,6 +6,8 @@ import com.example.Based_security_project.exception.NotFoundException;
 import com.example.Based_security_project.model.User;
 import com.example.Based_security_project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,9 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JavaMailSender javaMailSender;
+
     public User saveUser(UserDto userDto) {
         User user = new User();
         user.setNome(userDto.getNome());
@@ -27,8 +32,11 @@ public class UserService {
         user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setRole(Role.USER);
+        user.setEmail(userDto.getEmail());
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        sendRegistrationEmail(savedUser.getEmail());
+        return savedUser;
     }
 
     public List<User> getAllUser() {
@@ -62,4 +70,23 @@ public class UserService {
         User userDaCancellare = getUser(id);
         userRepository.delete(userDaCancellare);
     }
-}
+
+    private void sendRegistrationEmail(String recipientEmail) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(recipientEmail); // recipientEmail ORA CONTERRÀ L'EMAIL VERA
+        message.setSubject("Benvenuto!");
+        message.setText("Congratulazioni! La tua registrazione al servizio è avvenuta con successo.\n" +
+                "Ora puoi accedere e utilizzare tutte le nostre funzionalità.\n\n" +
+                "Cordiali saluti!");
+
+        try {
+            javaMailSender.send(message);
+            System.out.println("Email di registrazione inviata a: " + recipientEmail);
+        } catch (Exception e) {
+            System.err.println("Errore durante l'invio dell'email di registrazione a " + recipientEmail + ": " + e.getMessage());
+            // Qui potresti loggare l'errore o gestire la notifica in altro modo
+        }
+    }
+    }
+
+
